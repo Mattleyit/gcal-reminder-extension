@@ -3,9 +3,23 @@ import { MESSAGES } from '../background/constants.js';
 const versionEl = document.getElementById('version');
 const dotEl = document.getElementById('status-dot');
 const textEl = document.getElementById('status-text');
+const testEl = document.getElementById('test-reminder');
 
 document.getElementById('open-options').addEventListener('click', () => {
   chrome.runtime.openOptionsPage();
+});
+
+// Reminder di prova a 1 minuto: abbastanza vicino da vedere il countdown
+// entrare nell'ultimo minuto senza aspettare.
+testEl.addEventListener('click', async () => {
+  testEl.disabled = true;
+  try {
+    await chrome.runtime.sendMessage({ type: MESSAGES.testReminder, minutesBefore: 1 });
+    window.close();
+  } catch (error) {
+    console.error('[gcal-reminder] test reminder', error);
+    testEl.disabled = false;
+  }
 });
 
 async function render() {

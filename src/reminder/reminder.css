@@ -1,0 +1,223 @@
+:root {
+  --indigo: #6366f1;
+  --pink: #ec4899;
+  --amber: #f59e0b;
+  --red: #ef4444;
+  --red-dark: #b91c1c;
+  --green: #10b981;
+  --white: #ffffff;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  color: var(--white);
+  overflow: hidden;
+}
+
+/* Sfondo scuro semitrasparente con gradient animato: il reminder deve
+   catturare l'occhio anche in visione periferica. */
+.overlay {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  padding: 24px;
+  background:
+    radial-gradient(circle at 20% 20%, rgba(99, 102, 241, 0.45), transparent 55%),
+    radial-gradient(circle at 80% 80%, rgba(236, 72, 153, 0.45), transparent 55%),
+    rgba(11, 13, 20, 0.92);
+  background-size: 140% 140%, 140% 140%, auto;
+  animation: drift 12s ease-in-out infinite alternate;
+}
+
+@keyframes drift {
+  from {
+    background-position: 0% 0%, 100% 100%, 0 0;
+  }
+  to {
+    background-position: 30% 20%, 70% 80%, 0 0;
+  }
+}
+
+.card {
+  width: min(760px, 100%);
+  padding: 56px 48px;
+  text-align: center;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 28px;
+  background: rgba(24, 27, 38, 0.86);
+  box-shadow: 0 32px 90px rgba(0, 0, 0, 0.55);
+  animation: pop-in 420ms cubic-bezier(0.22, 1.2, 0.36, 1) both;
+}
+
+@keyframes pop-in {
+  from {
+    opacity: 0;
+    transform: scale(0.88);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.eyebrow {
+  margin: 0 0 12px;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.62);
+}
+
+.title {
+  margin: 0;
+  font-size: clamp(30px, 5vw, 52px);
+  font-weight: 750;
+  line-height: 1.12;
+}
+
+.start-time {
+  margin: 14px 0 0;
+  font-size: 18px;
+  color: rgba(255, 255, 255, 0.72);
+}
+
+/* Il countdown e' l'elemento informativo principale: grande, monospaziato
+   per non farlo "ballare", e pulsante.
+
+   Il gradiente passa SEMPRE dalla custom property --countdown-gradient e
+   mai dalla scorciatoia `background`: quella scorciatoia azzera
+   background-clip, quindi il gradiente riempirebbe tutto il box e le cifre
+   (trasparenti) diventerebbero invisibili. Gli stati qui sotto cambiano
+   solo la variabile. */
+.countdown {
+  --countdown-gradient: linear-gradient(135deg, var(--indigo), var(--pink));
+
+  margin: 28px 0 36px;
+  font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+  font-size: clamp(56px, 12vw, 128px);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+  background-image: var(--countdown-gradient);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: pulse 1.6s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.045);
+    opacity: 0.86;
+  }
+}
+
+/* Ultimo minuto e evento gia' iniziato: il colore cambia significato. */
+.card.is-soon .countdown {
+  --countdown-gradient: linear-gradient(135deg, var(--amber), var(--red));
+  animation-duration: 1s;
+}
+
+.card.is-late .countdown {
+  --countdown-gradient: linear-gradient(135deg, var(--red), var(--red-dark));
+  animation-duration: 0.8s;
+}
+
+.card.is-late .eyebrow {
+  color: var(--red);
+}
+
+/* Se il ritaglio del gradiente sul testo non e' supportato, meglio un
+   countdown a colore pieno che un rettangolo colorato senza cifre. */
+@supports not ((-webkit-background-clip: text) or (background-clip: text)) {
+  .countdown {
+    background-image: none;
+    color: var(--white);
+  }
+
+  .card.is-soon .countdown {
+    color: var(--amber);
+  }
+
+  .card.is-late .countdown {
+    color: var(--red);
+  }
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  justify-content: center;
+}
+
+.btn {
+  padding: 15px 28px;
+  font: inherit;
+  font-size: 16px;
+  font-weight: 650;
+  color: var(--white);
+  text-decoration: none;
+  border: 1px solid transparent;
+  border-radius: 14px;
+  cursor: pointer;
+  transition: transform 120ms ease, filter 120ms ease;
+}
+
+.btn:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.08);
+}
+
+.btn--join {
+  background: linear-gradient(135deg, var(--indigo), var(--pink));
+  box-shadow: 0 12px 30px rgba(99, 102, 241, 0.4);
+}
+
+.btn--snooze {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.24);
+}
+
+.btn--dismiss {
+  background: transparent;
+  border-color: rgba(255, 255, 255, 0.24);
+  color: rgba(255, 255, 255, 0.78);
+}
+
+.sound-hint {
+  margin-top: 26px;
+  padding: 8px 14px;
+  font: inherit;
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.7);
+  background: transparent;
+  border: 1px dashed rgba(255, 255, 255, 0.3);
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .overlay,
+  .card,
+  .countdown {
+    animation: none;
+  }
+}
