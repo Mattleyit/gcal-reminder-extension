@@ -1,13 +1,16 @@
-// Valori condivisi tra service worker, options page e popup.
+// Valori condivisi tra service worker, options page, popup e reminder.
 // Unica fonte di verita': non duplicare queste stringhe altrove.
 
 export const ALARM_POLL = 'gcal-poll';
+export const ALARM_SNOOZE_PREFIX = 'gcal-snooze:';
 
 export const STORAGE_KEYS = {
   settings: 'settings',
   authState: 'authState',
   scheduled: 'scheduledEvents',
-  activeReminder: 'activeReminder'
+  activeReminder: 'activeReminder',
+  reminderWindowId: 'reminderWindowId',
+  snoozed: 'snoozedEvents'
 };
 
 export const DEFAULT_SETTINGS = {
@@ -23,3 +26,5 @@ export const MESSAGES = {
   dismissReminder: 'dismiss-reminder',
   snoozeReminder: 'snooze-reminder'
 };
+
+export const SNOOZE_MINUTES = 5;

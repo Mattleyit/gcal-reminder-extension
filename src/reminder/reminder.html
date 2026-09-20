@@ -2,10 +2,30 @@
 <html lang="it">
   <head>
     <meta charset="utf-8" />
-    <title>Reminder</title>
+    <title>Sta per iniziare</title>
+    <link rel="stylesheet" href="reminder.css" />
   </head>
   <body>
-    <!-- Popup fullscreen implementato nella fase dedicata (issue #7). -->
-    <p>Reminder placeholder.</p>
+    <div class="overlay">
+      <main class="card" id="card">
+        <p class="eyebrow" id="eyebrow">Sta per iniziare</p>
+
+        <h1 class="title" id="title">Caricamento...</h1>
+
+        <p class="start-time" id="start-time"></p>
+
+        <div class="countdown" id="countdown" aria-live="polite">--:--</div>
+
+        <div class="actions">
+          <a class="btn btn--join" id="join" href="#" hidden>Entra nel meeting</a>
+          <button class="btn btn--snooze" id="snooze" type="button">Rimanda 5 min</button>
+          <button class="btn btn--dismiss" id="dismiss" type="button">Chiudi</button>
+        </div>
+
+        <button class="sound-hint" id="sound-hint" type="button" hidden>Attiva il suono</button>
+      </main>
+    </div>
+
+    <script type="module" src="reminder.js"></script>
   </body>
 </html>

@@ -1,8 +1,25 @@
 // Service worker dell'estensione (Manifest V3).
-// In questa fase contiene solo il ciclo di vita e il router dei messaggi:
-// auth, polling del calendario e popup arrivano nelle fasi successive.
+// Ciclo di vita, router dei messaggi e gestione degli alarm.
+// Auth e polling del calendario arrivano nelle fasi successive.
 
-import { DEFAULT_SETTINGS, MESSAGES, STORAGE_KEYS } from './constants.js';
+import { ALARM_SNOOZE_PREFIX, DEFAULT_SETTINGS, MESSAGES, SNOOZE_MINUTES, STORAGE_KEYS } from './constants.js';
+import {
+  buildTestEvent,
+  clearReminderState,
+  closeReminderWindow,
+  getReminderWindowId,
+  handleSnoozeAlarm,
+  openReminderWindow,
+  pruneOrphanReminderWindows,
+  snoozeReminder
+} from './reminders.js';
+
+// Eseguito a ogni avvio del service worker (installazione, riavvio del
+// browser, risveglio dopo terminazione): chiude eventuali finestre di
+// reminder rimaste in giro da sessioni precedenti.
+pruneOrphanReminderWindows().catch((error) => {
+  console.warn('[gcal-reminder] pulizia finestre orfane fallita', error);
+});
 
 chrome.runtime.onInstalled.addListener(async (details) => {
   console.log('[gcal-reminder] installato:', details.reason);
@@ -52,7 +69,42 @@ async function handleMessage(message) {
         settings
       };
     }
+
+    case MESSAGES.testReminder: {
+      const settings = await getSettings();
+      const minutes = Number(message.minutesBefore ?? settings.minutesBefore) || 1;
+      // forceNew: un test deve sempre produrre una finestra nuova,
+      // altrimenti al secondo click sembra che non funzioni nulla.
+      const windowId = await openReminderWindow(buildTestEvent(minutes), { forceNew: true });
+      return { ok: true, windowId };
+    }
+
+    case MESSAGES.dismissReminder: {
+      await closeReminderWindow();
+      return { ok: true };
+    }
+
+    case MESSAGES.snoozeReminder: {
+      const minutes = Number(message.minutes) || SNOOZE_MINUTES;
+      return snoozeReminder(minutes);
+    }
+
     default:
       return { ok: false, error: `Messaggio non gestito: ${message?.type}` };
   }
 }
+
+chrome.alarms.onAlarm.addListener(async (alarm) => {
+  if (alarm.name.startsWith(ALARM_SNOOZE_PREFIX)) {
+    await handleSnoozeAlarm(alarm.name);
+  }
+});
+
+// Se l'utente chiude la finestra del reminder a mano, lo stato va ripulito,
+// altrimenti il prossimo reminder proverebbe a riusare una finestra morta.
+chrome.windows.onRemoved.addListener(async (windowId) => {
+  const trackedId = await getReminderWindowId();
+  if (trackedId === windowId) {
+    await clearReminderState();
+  }
+});
