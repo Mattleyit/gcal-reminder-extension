@@ -3,6 +3,13 @@
   "name": "GCal Reminder",
   "version": "0.1.0",
   "description": "Reminder a tutto schermo per gli eventi di Google Calendar. Impossibile da ignorare.",
+  "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAlNPoyUrQIb5paUUERjzOfv3OyJceBMWuDCi1zBpC3ZeoT5Fk3LY/AsbT4GmOl/Kbgz830v3myuYyhne5jdbkHzZpqtBRUbVR2LxUlM3gmULMi7/H6M8NCIyBLQPEM+agQFRyfpZnQaYknyV7dTDdQLGL4YjveHeV9AA1jz2uBqkODwWaJBAi2kADHqTR0gj8I3LRg3+kQMNoAUD+7r9+A4o7hkOQnVucWlvIpD8IS+HzCQi3LP5eJjiH2vkJpudqvtyK4uyrcpc3xQyfr8bzoLNY0ojZKU67yajUVy2gS0Q21FUol47gDNILtY7OKi0+D/crL4bPBr07PW3UQpqaWwIDAQAB",
+  "oauth2": {
+    "client_id": "185581795549-6gq1a8dg02rm5u68c0gg23448u23srjg.apps.googleusercontent.com",
+    "scopes": [
+      "https://www.googleapis.com/auth/calendar.readonly"
+    ]
+  },
   "minimum_chrome_version": "116",
   "permissions": [
     "identity",
