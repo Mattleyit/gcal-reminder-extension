@@ -10,8 +10,16 @@ import {
   getReminderWindowId,
   handleSnoozeAlarm,
   openReminderWindow,
+  pruneOrphanReminderWindows,
   snoozeReminder
 } from './reminders.js';
+
+// Eseguito a ogni avvio del service worker (installazione, riavvio del
+// browser, risveglio dopo terminazione): chiude eventuali finestre di
+// reminder rimaste in giro da sessioni precedenti.
+pruneOrphanReminderWindows().catch((error) => {
+  console.warn('[gcal-reminder] pulizia finestre orfane fallita', error);
+});
 
 chrome.runtime.onInstalled.addListener(async (details) => {
   console.log('[gcal-reminder] installato:', details.reason);
@@ -65,7 +73,9 @@ async function handleMessage(message) {
     case MESSAGES.testReminder: {
       const settings = await getSettings();
       const minutes = Number(message.minutesBefore ?? settings.minutesBefore) || 1;
-      const windowId = await openReminderWindow(buildTestEvent(minutes));
+      // forceNew: un test deve sempre produrre una finestra nuova,
+      // altrimenti al secondo click sembra che non funzioni nulla.
+      const windowId = await openReminderWindow(buildTestEvent(minutes), { forceNew: true });
       return { ok: true, windowId };
     }
 
