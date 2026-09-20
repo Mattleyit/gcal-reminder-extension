@@ -1,7 +1,9 @@
 :root {
   --indigo: #6366f1;
   --pink: #ec4899;
+  --amber: #f59e0b;
   --red: #ef4444;
+  --red-dark: #b91c1c;
   --green: #10b981;
   --white: #ffffff;
 }
@@ -92,15 +94,23 @@ body {
 }
 
 /* Il countdown e' l'elemento informativo principale: grande, monospaziato
-   per non farlo "ballare", e pulsante. */
+   per non farlo "ballare", e pulsante.
+
+   Il gradiente passa SEMPRE dalla custom property --countdown-gradient e
+   mai dalla scorciatoia `background`: quella scorciatoia azzera
+   background-clip, quindi il gradiente riempirebbe tutto il box e le cifre
+   (trasparenti) diventerebbero invisibili. Gli stati qui sotto cambiano
+   solo la variabile. */
 .countdown {
+  --countdown-gradient: linear-gradient(135deg, var(--indigo), var(--pink));
+
   margin: 28px 0 36px;
   font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
   font-size: clamp(56px, 12vw, 128px);
   font-weight: 700;
   font-variant-numeric: tabular-nums;
   line-height: 1;
-  background: linear-gradient(135deg, var(--indigo), var(--pink));
+  background-image: var(--countdown-gradient);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
@@ -121,17 +131,34 @@ body {
 
 /* Ultimo minuto e evento gia' iniziato: il colore cambia significato. */
 .card.is-soon .countdown {
-  background: linear-gradient(135deg, #f59e0b, var(--red));
+  --countdown-gradient: linear-gradient(135deg, var(--amber), var(--red));
   animation-duration: 1s;
 }
 
 .card.is-late .countdown {
-  background: linear-gradient(135deg, var(--red), var(--red));
+  --countdown-gradient: linear-gradient(135deg, var(--red), var(--red-dark));
   animation-duration: 0.8s;
 }
 
 .card.is-late .eyebrow {
   color: var(--red);
+}
+
+/* Se il ritaglio del gradiente sul testo non e' supportato, meglio un
+   countdown a colore pieno che un rettangolo colorato senza cifre. */
+@supports not ((-webkit-background-clip: text) or (background-clip: text)) {
+  .countdown {
+    background-image: none;
+    color: var(--white);
+  }
+
+  .card.is-soon .countdown {
+    color: var(--amber);
+  }
+
+  .card.is-late .countdown {
+    color: var(--red);
+  }
 }
 
 .actions {
