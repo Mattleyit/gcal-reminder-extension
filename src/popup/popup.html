@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="it">
+  <head>
+    <meta charset="utf-8" />
+    <title>GCal Reminder</title>
+    <link rel="stylesheet" href="popup.css" />
+  </head>
+  <body>
+    <header class="header">
+      <span class="logo" aria-hidden="true"></span>
+      <div>
+        <h1>GCal Reminder</h1>
+        <p class="version" id="version">v-</p>
+      </div>
+    </header>
+
+    <section class="status" id="status">
+      <span class="dot dot--idle" id="status-dot"></span>
+      <span id="status-text">Controllo stato...</span>
+    </section>
+
+    <button class="btn btn--primary" id="open-options" type="button">Apri impostazioni</button>
+
+    <script type="module" src="popup.js"></script>
+  </body>
+</html>
