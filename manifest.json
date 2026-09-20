@@ -1,0 +1,25 @@
+{
+  "manifest_version": 3,
+  "name": "GCal Reminder",
+  "version": "0.1.0",
+  "description": "Reminder a tutto schermo per gli eventi di Google Calendar. Impossibile da ignorare.",
+  "minimum_chrome_version": "116",
+  "permissions": [
+    "identity",
+    "alarms",
+    "storage",
+    "notifications"
+  ],
+  "host_permissions": [
+    "https://www.googleapis.com/*"
+  ],
+  "background": {
+    "service_worker": "src/background/background.js",
+    "type": "module"
+  },
+  "action": {
+    "default_title": "GCal Reminder",
+    "default_popup": "src/popup/popup.html"
+  },
+  "options_page": "src/options/options.html"
+}

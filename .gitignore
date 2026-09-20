@@ -1,0 +1,18 @@
+# Build / packaging
+dist/
+*.zip
+*.crx
+*.pem
+
+# Dipendenze (se in futuro serviranno)
+node_modules/
+
+# Segreti locali
+.env
+.env.local
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
