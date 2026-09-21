@@ -22,6 +22,8 @@ export const DEFAULT_SETTINGS = {
 
 export const MESSAGES = {
   getStatus: 'get-status',
+  signIn: 'sign-in',
+  signOut: 'sign-out',
   testReminder: 'test-reminder',
   dismissReminder: 'dismiss-reminder',
   snoozeReminder: 'snooze-reminder'

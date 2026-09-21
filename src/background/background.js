@@ -1,7 +1,8 @@
 // Service worker dell'estensione (Manifest V3).
 // Ciclo di vita, router dei messaggi e gestione degli alarm.
-// Auth e polling del calendario arrivano nelle fasi successive.
+// Il polling del calendario arriva nella fase successiva.
 
+import { getAuthState, signIn, signOut } from './auth.js';
 import { ALARM_SNOOZE_PREFIX, DEFAULT_SETTINGS, MESSAGES, SNOOZE_MINUTES, STORAGE_KEYS } from './constants.js';
 import {
   buildTestEvent,
@@ -61,13 +62,25 @@ chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
 async function handleMessage(message) {
   switch (message?.type) {
     case MESSAGES.getStatus: {
-      const settings = await getSettings();
+      const [settings, auth] = await Promise.all([getSettings(), getAuthState()]);
       return {
         ok: true,
         version: chrome.runtime.getManifest().version,
-        authenticated: false, // implementato nella fase OAuth
+        authenticated: auth.authenticated,
+        email: auth.email,
+        expired: auth.expired,
         settings
       };
+    }
+
+    case MESSAGES.signIn: {
+      const authState = await signIn();
+      return { ok: true, ...authState, authenticated: true };
+    }
+
+    case MESSAGES.signOut: {
+      await signOut();
+      return { ok: true, authenticated: false };
     }
 
     case MESSAGES.testReminder: {

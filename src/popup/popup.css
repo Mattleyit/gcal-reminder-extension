@@ -6,6 +6,7 @@
   --bg: #ffffff;
   --green: #10b981;
   --amber: #f59e0b;
+  --red: #ef4444;
 }
 
 * {
@@ -54,6 +55,7 @@ h1 {
   margin: 16px 0;
   padding: 10px 12px;
   font-size: 13px;
+  line-height: 1.35;
   border-radius: 10px;
   background: #f4f5fb;
 }
@@ -77,6 +79,20 @@ h1 {
   background: var(--green);
 }
 
+.dot--error {
+  background: var(--red);
+}
+
+.error {
+  margin: 0 0 12px;
+  padding: 10px 12px;
+  font-size: 12px;
+  line-height: 1.4;
+  color: #8a1c1c;
+  border-radius: 10px;
+  background: #fdecec;
+}
+
 .btn {
   width: 100%;
   padding: 10px 14px;
@@ -92,11 +108,16 @@ h1 {
   margin-top: 8px;
 }
 
+.btn[disabled] {
+  opacity: 0.6;
+  cursor: default;
+}
+
 .btn--primary {
   background: linear-gradient(135deg, var(--indigo), var(--pink));
 }
 
-.btn--primary:hover {
+.btn--primary:hover:not([disabled]) {
   filter: brightness(1.06);
 }
 
@@ -106,6 +127,17 @@ h1 {
   border-color: #d8dae5;
 }
 
-.btn--ghost:hover {
+.btn--ghost:hover:not([disabled]) {
   background: #f7f8fc;
+}
+
+.btn--quiet {
+  font-weight: 500;
+  font-size: 12px;
+  color: var(--muted);
+  background: transparent;
+}
+
+.btn--quiet:hover:not([disabled]) {
+  color: var(--ink);
 }
